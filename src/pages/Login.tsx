@@ -110,19 +110,19 @@ export default function Login() {
         <Container maxWidth="xs">
           <Paper elevation={3} sx={{ p: 4, textAlign: 'center' }}>
             <Typography variant="h5" mb={3}>
-              어서오세요!
+              환영합니다!
             </Typography>
             <TextField
               fullWidth
               margin="normal"
-              label="User ID"
+              label="아이디"
               value={userid}
               onChange={(e) => setUserid(e.target.value)}
             />
             <TextField
               fullWidth
               margin="normal"
-              label="Password"
+              label="비밀번호"
               type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -174,7 +174,7 @@ export default function Login() {
               size="large"
               onClick={handleLogin}
             >
-              Sign in
+              로그인
             </Button>
 
             <Typography variant="body2" color="text.secondary" mt={2}>
