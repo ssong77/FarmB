@@ -7,7 +7,7 @@ import {
   CardMedia,
   CardContent,
   Paper,
-  // Grid, // 더 이상 Grid를 사용하지 않으므로 주석 처리하거나 제거합니다.
+
 } from '@mui/material'
 import {
   BarChart,
