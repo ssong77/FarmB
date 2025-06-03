@@ -82,7 +82,7 @@ export default function Header() {
                 open={Boolean(anchorEl)}
                 onClose={handleMenuClose}
               >
-                <MenuItem onClick={handleMypage}>마이페이지</MenuItem>
+                
                 <MenuItem onClick={handleLogout}>로그아웃</MenuItem>
               </Menu>
             </>
