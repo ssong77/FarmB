@@ -19,10 +19,7 @@ export default function Header() {
     handleMenuClose()
     navigate('/')
   }
-  const handleMypage = () => {
-    handleMenuClose()
-    navigate('/mypage')
-  }
+
 
   // 네비게이션 메뉴 항목 정의 (레이블과 경로)
   const navItems = [
