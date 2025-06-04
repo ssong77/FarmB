@@ -24,7 +24,7 @@ export default function AdminHeader() {
             sx={{ cursor: 'pointer', fontWeight: 'bold' }}
             onClick={() => navigate('/admin')}
           >
-            관리자 아무개
+            관리자 대시보드
           </Typography>
           <Button size="small" onClick={() => navigate('/login')}>
             로그아웃

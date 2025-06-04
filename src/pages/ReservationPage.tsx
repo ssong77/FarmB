@@ -1,7 +1,5 @@
 // src/pages/ReservationPage.tsx
 import React, { useState } from 'react'
-
-// 
 import {
   Box,
   Container,
@@ -24,10 +22,11 @@ import {
   TextField,
   FormControlLabel,
   Checkbox,
-  FormControl,      // ← 누락되었다면 반드시 추가
-  InputLabel,       // ← 누락되었다면 반드시 추가
-  Select,           // ← 누락되었다면 반드시 추가
+  FormControl,
+  InputLabel,
+  Select,
   Button,
+  Chip, // 상태 표시용 Chip
 } from '@mui/material'
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
@@ -141,8 +140,7 @@ const dummyReservations: Reservation[] = [
 // ─── ReservationPage 컴포넌트 ───
 export default function ReservationPage() {
   // 실제로는 API 호출로 받아온 데이터를 상태로 관리
-  const [reservations, setReservations] =
-    useState<Reservation[]>(dummyReservations)
+  const [reservations, setReservations] = useState<Reservation[]>(dummyReservations)
 
   // (A) 페이지네이션 상태
   const [page, setPage] = useState(1)
@@ -152,10 +150,7 @@ export default function ReservationPage() {
     setPage(value)
   }
   // 현재 페이지에 보여줄 예약 리스트
-  const displayedReservations = reservations.slice(
-    (page - 1) * pageSize,
-    page * pageSize
-  )
+  const displayedReservations = reservations.slice((page - 1) * pageSize, page * pageSize)
 
   // (B) “수정/삭제” 메뉴 상태
   const [menuAnchorEl, setMenuAnchorEl] = useState<HTMLElement | null>(null)
@@ -238,9 +233,7 @@ export default function ReservationPage() {
 
   // (I) 작업 항목 체크박스 토글
   const handleTaskToggle = (task: string) => {
-    setEditTasks((prev) =>
-      prev.includes(task) ? prev.filter((t) => t !== task) : [...prev, task]
-    )
+    setEditTasks((prev) => (prev.includes(task) ? prev.filter((t) => t !== task) : [...prev, task]))
   }
 
   // ─── (J) “드론 비행 요청” 모달 상태 및 필드 ───
@@ -277,6 +270,23 @@ export default function ReservationPage() {
     })
     // 실제 요청 로직을 여기에 작성 (예: API 호출)
     setOpenRequestDialog(false)
+    window.alert('드론 비행 요청이 정상 처리되었습니다.') // alert 창 띄우기
+  }
+
+  // 상태별 Chip 렌더링
+  const renderStatusChip = (status: Reservation['status']) => {
+    switch (status) {
+      case '대기':
+        return <Chip label="대기" color="warning" variant="outlined" size="small" />
+      case '진행중':
+        return <Chip label="진행중" color="info" variant="filled" size="small" />
+      case '완료':
+        return <Chip label="완료" color="success" variant="filled" size="small" />
+      case '취소':
+        return <Chip label="취소" color="error" variant="filled" size="small" />
+      default:
+        return <Chip label={status} size="small" />
+    }
   }
 
   return (
@@ -321,9 +331,7 @@ export default function ReservationPage() {
                     <TableCell sx={{ fontWeight: 'bold' }}>작업 항목</TableCell>
                     <TableCell sx={{ fontWeight: 'bold' }}>드론 기체</TableCell>
                     <TableCell sx={{ fontWeight: 'bold' }}>상태</TableCell>
-                    <TableCell align="right" sx={{ fontWeight: 'bold' }}>
-                      
-                    </TableCell>
+                    <TableCell align="right" sx={{ fontWeight: 'bold' }}></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -334,12 +342,9 @@ export default function ReservationPage() {
                       <TableCell>{res.area}</TableCell>
                       <TableCell>{res.tasks.join(', ')}</TableCell>
                       <TableCell>{res.drone}</TableCell>
-                      <TableCell>{res.status}</TableCell>
+                      <TableCell>{renderStatusChip(res.status)}</TableCell>
                       <TableCell align="right">
-                        <IconButton
-                          size="small"
-                          onClick={(e) => handleMenuOpen(e, res.id)}
-                        >
+                        <IconButton size="small" onClick={(e) => handleMenuOpen(e, res.id)}>
                           <MoreVertIcon fontSize="small" />
                         </IconButton>
                       </TableCell>
@@ -359,13 +364,7 @@ export default function ReservationPage() {
             {/* ── 페이지네이션 ── */}
             {pageCount > 1 && (
               <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-                <Pagination
-                  count={pageCount}
-                  page={page}
-                  onChange={handlePageChange}
-                  size="small"
-                  color="primary"
-                />
+                <Pagination count={pageCount} page={page} onChange={handlePageChange} size="small" color="primary" />
               </Box>
             )}
 
@@ -398,12 +397,7 @@ export default function ReservationPage() {
       </Box>
 
       {/* ─── “수정” 다이얼로그 ─── */}
-      <Dialog
-        open={openEditDialog}
-        onClose={handleCloseEditDialog}
-        fullWidth
-        maxWidth="sm"
-      >
+      <Dialog open={openEditDialog} onClose={handleCloseEditDialog} fullWidth maxWidth="sm">
         <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <IconButton onClick={handleCloseEditDialog} size="small">
             <ArrowBackIcon />
@@ -448,13 +442,7 @@ export default function ReservationPage() {
             <Typography variant="body1" sx={{ mb: 0.5 }}>
               작업 구역
             </Typography>
-            <TextField
-              fullWidth
-              variant="outlined"
-              size="small"
-              value={editArea}
-              onChange={(e) => setEditArea(e.target.value)}
-            />
+            <TextField fullWidth variant="outlined" size="small" value={editArea} onChange={(e) => setEditArea(e.target.value)} />
           </Box>
 
           {/* 작업 항목 체크박스 */}
@@ -466,12 +454,7 @@ export default function ReservationPage() {
               {taskOptions.map((task) => (
                 <FormControlLabel
                   key={task}
-                  control={
-                    <Checkbox
-                      checked={editTasks.includes(task)}
-                      onChange={() => handleTaskToggle(task)}
-                    />
-                  }
+                  control={<Checkbox checked={editTasks.includes(task)} onChange={() => handleTaskToggle(task)} />}
                   label={task}
                 />
               ))}
@@ -485,11 +468,7 @@ export default function ReservationPage() {
             </Typography>
             <FormControl fullWidth size="small">
               <InputLabel>기체 선택</InputLabel>
-              <Select
-                value={editDrone}
-                label="기체 선택"
-                onChange={(e) => setEditDrone(e.target.value)}
-              >
+              <Select value={editDrone} label="기체 선택" onChange={(e) => setEditDrone(e.target.value)}>
                 {droneOptions.map((drone) => (
                   <MenuItem key={drone} value={drone}>
                     {drone}
@@ -509,9 +488,7 @@ export default function ReservationPage() {
               <Select
                 value={editStatus}
                 label="상태 선택"
-                onChange={(e) =>
-                  setEditStatus(e.target.value as Reservation['status'])
-                }
+                onChange={(e) => setEditStatus(e.target.value as Reservation['status'])}
               >
                 <MenuItem value="대기">대기</MenuItem>
                 <MenuItem value="진행중">진행중</MenuItem>
@@ -534,12 +511,7 @@ export default function ReservationPage() {
       </Dialog>
 
       {/* ─── “드론 비행 요청” 모달 ─── */}
-      <Dialog
-        open={openRequestDialog}
-        onClose={handleCloseRequestDialog}
-        fullWidth
-        maxWidth="sm"
-      >
+      <Dialog open={openRequestDialog} onClose={handleCloseRequestDialog} fullWidth maxWidth="sm">
         <DialogTitle>드론 비행 요청</DialogTitle>
         <DialogContent dividers>
           {/* 대상 구역(농장) */}
@@ -603,9 +575,7 @@ export default function ReservationPage() {
                       checked={reqTasks.includes(task)}
                       onChange={() => {
                         setReqTasks((prev) =>
-                          prev.includes(task)
-                            ? prev.filter((t) => t !== task)
-                            : [...prev, task]
+                          prev.includes(task) ? prev.filter((t) => t !== task) : [...prev, task]
                         )
                       }}
                     />

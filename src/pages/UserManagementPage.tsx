@@ -136,7 +136,7 @@ export default function UserManagementPage() {
   
 
       {/* Main Content */}
-      <Box component="main" sx={{ mt: '64px', py: 4 }}>
+      <Box component="main" sx={{ mt: '1px', py: 4 }}>
         <Container maxWidth="lg">
           <Typography variant="h5" gutterBottom>
             사용자 관리

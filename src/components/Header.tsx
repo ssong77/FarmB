@@ -1,15 +1,15 @@
 // src/components/Header.tsx
 
-import { Box, AppBar, Toolbar, IconButton, Button, Menu, MenuItem, Typography } from '@mui/material'
+import { Box, AppBar, Toolbar, Button, Menu, MenuItem, Typography } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
-import AccountCircle from '@mui/icons-material/AccountCircle'
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import { useAuth } from '../contexts/AuthContext'
 import LogoImage from '../assets/images/FarmBee.png'
 import { useState } from 'react'
 
 export default function Header() {
   const navigate = useNavigate()
-  const { isLoggedIn, logout } = useAuth()
+  const { isLoggedIn, logout, user } = useAuth() // user 정보도 가져온다고 가정
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
   const handleMenuOpen = (e: React.MouseEvent<HTMLElement>) => setAnchorEl(e.currentTarget)
@@ -19,6 +19,10 @@ export default function Header() {
     handleMenuClose()
     navigate('/')
   }
+
+  // 사용자명 또는 기본값
+  const userName = user?.name || '사용자'
+  
 
 
   // 네비게이션 메뉴 항목 정의 (레이블과 경로)
@@ -46,7 +50,7 @@ export default function Header() {
           onClick={() => navigate('/')}
           sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
         >
-          <img src={LogoImage} alt="FarmBee" style={{ height: 40 }} />
+          <img src={LogoImage} alt="FarmBee" style={{ height: 70 }} />
         </Box>
 
         {/* 네비게이션 메뉴 */}
@@ -67,20 +71,37 @@ export default function Header() {
           ))}
         </Box>
 
-        {/* 로그인/회원 아이콘 및 메뉴 */}
+        {/* 로그인/사용자 정보 */}
         <Box>
           {isLoggedIn ? (
             <>
-              <IconButton onClick={handleMenuOpen}>
-                <AccountCircle />
-              </IconButton>
+              <Button
+                onClick={handleMenuOpen}
+                sx={{ 
+                  textTransform: 'none',
+                  color: 'text.primary',
+                  '&:hover': { 
+                    bgcolor: 'action.hover' 
+                  }
+                }}
+                endIcon={<ArrowDropDownIcon />}
+              >
+                <Typography variant="body2" fontWeight="medium">
+                  {userName}님
+                </Typography>
+              </Button>
               <Menu
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={handleMenuClose}
+                sx={{ mt: 1 }}
+                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
               >
                 
-                <MenuItem onClick={handleLogout}>로그아웃</MenuItem>
+                <MenuItem onClick={handleLogout}>
+                  로그아웃
+                </MenuItem>
               </Menu>
             </>
           ) : (

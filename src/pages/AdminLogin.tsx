@@ -1,4 +1,4 @@
-// src/pages/Login.tsx
+// src/pages/AdminLogin.tsx
 import  { useState } from 'react'
 import {
   Box,
@@ -19,11 +19,11 @@ import {
   DialogActions,
 } from '@mui/material'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
-import { useNavigate, Link as RouterLink } from 'react-router-dom'
+import { useNavigate} from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import Header from '../components/Header'
 
-export default function Login() {
+export default function AdminLogin() {
   const [showPassword, setShowPassword] = useState(false)
   const [userid, setUserid] = useState('')
   const [password, setPassword] = useState('')
@@ -44,24 +44,19 @@ export default function Login() {
   const [openForgotDialog, setOpenForgotDialog] = useState(false)
   const [forgotInput, setForgotInput] = useState('')
 
-  // 일반 로그인/관리자 로그인 구분
+  // 관리자 전용 로그인 로직(초기 복사 -> 나중에 수정)
   const handleLogin = () => {
-    if (userid === '1' && password === '1') {
-      // 관리자 로그인
+    if ((userid === 'admin' && password === 'admin') ||
+        (userid === '1'     && password === '1')) {
+      // 관리자 로그인 성공 예시
       login(userid) // 필요 시 token 등 저장
       setAlertInfo({ severity: 'success', message: '관리자 로그인 성공!' })
       setAlertOpen(true)
       setTimeout(() => navigate('/admin'), 1000)
-    } else if (userid === '1234' && password === '1234') {
-      // 일반 사용자 로그인
-      login(userid)
-      setAlertInfo({ severity: 'success', message: '로그인 성공!' })
-      setAlertOpen(true)
-      setTimeout(() => navigate('/'), 1000)
     } else {
       setAlertInfo({
         severity: 'error',
-        message: '아이디 또는 비밀번호가 올바르지 않습니다.',
+        message: '관리자 아이디 또는 비밀번호가 올바르지 않습니다.',
       })
       setAlertOpen(true)
     }
@@ -83,7 +78,7 @@ export default function Login() {
       setAlertOpen(true)
       return
     }
-    // 실제로는 서버 API 호출하여 메일 전송 등
+    // 실제 서버 호출 후 처리
     setAlertInfo({
       severity: 'success',
       message: `'${forgotInput}'(으)로 비밀번호 재설정 메일을 전송했습니다.`,
@@ -110,7 +105,7 @@ export default function Login() {
         <Container maxWidth="xs">
           <Paper elevation={3} sx={{ p: 4, textAlign: 'center' }}>
             <Typography variant="h5" mb={3}>
-              환영합니다!
+              관리자 로그인
             </Typography>
             <TextField
               fullWidth
@@ -129,10 +124,7 @@ export default function Login() {
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton
-                      onClick={() => setShowPassword((s) => !s)}
-                      edge="end"
-                    >
+                    <IconButton onClick={() => setShowPassword((s) => !s)} edge="end">
                       {showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
                   </InputAdornment>
@@ -140,12 +132,7 @@ export default function Login() {
               }}
             />
 
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              my={2}
-            >
+            <Box display="flex" justifyContent="space-between" alignItems="center" my={2}>
               <FormControlLabel
                 control={
                   <Checkbox
@@ -168,32 +155,9 @@ export default function Login() {
               </Typography>
             </Box>
 
-            <Button
-              variant="contained"
-              fullWidth
-              size="large"
-              onClick={handleLogin}
-            >
+            <Button variant="contained" fullWidth size="large" onClick={handleLogin}>
               로그인
             </Button>
-
-            <Typography variant="body2" color="text.secondary" mt={2}>
-              계정이 없으신가요?{' '}
-              <RouterLink to="/signup" style={{ textDecoration: 'underline' }}>
-                회원가입
-              </RouterLink>
-            </Typography>
-
-            {/* 관리자 로그인 페이지로 이동 (작게 회색글씨) */}
-            <Typography
-              variant="caption"
-              color="text.secondary"
-              mt={1}
-              sx={{ cursor: 'pointer' }}
-              onClick={() => navigate('/admin-login')}
-            >
-              관리자 로그인
-            </Typography>
           </Paper>
         </Container>
       </Box>
@@ -215,17 +179,11 @@ export default function Login() {
       </Snackbar>
 
       {/* 비밀번호 찾기 모달 */}
-      <Dialog
-        open={openForgotDialog}
-        onClose={handleCloseForgotDialog}
-        fullWidth
-        maxWidth="sm"
-      >
+      <Dialog open={openForgotDialog} onClose={handleCloseForgotDialog} fullWidth maxWidth="sm">
         <DialogTitle>비밀번호 찾기</DialogTitle>
         <DialogContent dividers>
           <Typography variant="body2" color="text.secondary" mb={2}>
-            등록하신 아이디 또는 이메일 주소를 입력하시면, 비밀번호 재설정 링크를
-            보내드립니다.
+            등록하신 관리자 아이디 또는 이메일 주소를 입력하시면, 재설정 링크를 보내드립니다.
           </Typography>
           <TextField
             fullWidth
@@ -233,15 +191,11 @@ export default function Login() {
             label="아이디 또는 이메일"
             value={forgotInput}
             onChange={(e) => setForgotInput(e.target.value)}
-            placeholder="예: user@example.com"
+            placeholder="예: admin@example.com"
           />
         </DialogContent>
         <DialogActions sx={{ px: 3, py: 2 }}>
-          <Button
-            color="error"
-            variant="contained"
-            onClick={handleCloseForgotDialog}
-          >
+          <Button color="error" variant="contained" onClick={handleCloseForgotDialog}>
             취소
           </Button>
           <Box sx={{ flex: 1 }} />

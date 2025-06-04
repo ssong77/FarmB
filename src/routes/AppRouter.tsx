@@ -15,6 +15,7 @@ import AdminReservationsPage from '../pages/AdminReservationsPage';
 import AdminAnalysisReportPage from '../pages/AdminAnalysisReportPage';
 import AdminStatisticsPage from '../pages/AdminStatisticsPage';
 import AdminSystemSettingsPage from '../pages/AdminSystemSettingsPage';
+import AdminLogin from '../pages/AdminLogin'
 
 export default function AppRouter() {
   return (
@@ -26,6 +27,7 @@ export default function AppRouter() {
       <Route path="/analysis" element={<AnalysisPage />} />
       <Route path="/reservation" element={<ReservationPage />} />
       <Route path="/statistics" element={<StatisticsPage />} />
+      <Route path="/admin-login" element={<AdminLogin />} />
 
       {/* 관리자 전용 레이아웃 (/admin/*) */}
       <Route path="/admin" element={<AdminLayout />}>
